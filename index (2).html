@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>Puzzle Love Surprise</title>
+<style>
+
+body {
+    background: #190000; /* أحمر غامق */
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+h1 {
+    text-align: center;
+    margin-top: 15px;
+    color: #ff5577;
+    text-shadow: 0 0 25px #ff1144;
+}
+
+/* منطقة الصورة */
+#puzzle-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+#puzzle-container {
+    width: 350px;
+    height: 460px;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 35px #ff0033;
+}
+
+/* قطع البازل */
+.piece {
+    position: absolute;
+    width: 25%;
+    height: 25%;
+    background-image: url("myphoto.jpg");
+    background-size: 400% 400%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    border-radius: 5px;
+}
+
+/* زرار القلب */
+#heart-btn {
+    width: 95px;
+    height: 95px;
+    border-radius: 50%;
+    background: #ff4abf;
+    border: none;
+    cursor: pointer;
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 25px #ff77dd, 0 0 60px #ff2acb inset;
+    transition: 0.15s;
+    font-size: 30px;
+    color: white;
+}
+
+#heart-btn:active {
+    transform: translateX(-50%) scale(0.92);
+}
+
+/* كلمات بحبك */
+.love-word {
+    position: absolute;
+    font-size: 22px;
+    color: #ff7ad9;
+    text-shadow: 0 0 15px #ff3ad1;
+    animation: fade 1.4s forwards;
+}
+
+@keyframes fade {
+    0% { opacity: 0; transform: scale(0.4); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(0.4); }
+}
+
+/* الرسالة النهائية */
+#final-message {
+    width: 85%;
+    margin: 50px auto;
+    font-size: 22px;
+    line-height: 2;
+    white-space: pre-line;
+    opacity: 0;
+    color: #ffd2e9;
+    text-shadow: 0 0 12px #ff4c7d;
+}
+
+/* typing effect */
+.typing {
+    border-right: 3px solid #ff7acb;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: caret 0.6s infinite;
+}
+
+@keyframes caret {
+    50% { border-color: transparent; }
+}
+
+</style>
+</head>
+<body>
+
+<h1>💗 مفاجأة ليكي 💗</h1>
+
+<div id="puzzle-wrapper">
+    <div id="puzzle-container"></div>
+</div>
+
+<button id="heart-btn">❤</button>
+
+<audio id="bg-music" src="music.mp3" loop></audio>
+
+<div id="final-message"></div>
+
+<script>
+
+document.addEventListener("click", () => {
+    const music = document.getElementById("bg-music");
+    music.play().catch(() => {});
+}, { once: true });
+
+// إعداد البازل
+const container = document.getElementById("puzzle-container");
+let index = 0;
+const pieces = [];
+
+for (let row = 0; row < 4; row++) {
+    for (let col = 0; col < 4; col++) {
+        let piece = document.createElement("div");
+        piece.classList.add("piece");
+        piece.style.left = (col * 25) + "%";
+        piece.style.top = (row * 25) + "%";
+        piece.style.backgroundPosition = `${col * -100}% ${row * -100}%`;
+        container.appendChild(piece);
+        pieces.push(piece);
+    }
+}
+
+// كلمة بحبك
+function showLoveWord() {
+    const word = document.createElement("div");
+    word.className = "love-word";
+    word.innerText = "بحبك ❤️";
+    word.style.left = Math.random() * (window.innerWidth - 120) + "px";
+    word.style.top = Math.random() * (window.innerHeight - 120) + "px";
+    document.body.appendChild(word);
+    setTimeout(() => word.remove(), 1500);
+}
+
+// كتابة الرسالة
+function typeMessage(text) {
+    const box = document.getElementById("final-message");
+    let i = 0;
+    box.innerHTML = "";
+    box.style.opacity = 1;
+
+    function typing() {
+        if (i < text.length) {
+            box.innerHTML += text[i];
+            i++;
+            setTimeout(typing, 40);
+        }
+    }
+    typing();
+}
+
+// عند الضغط على زر القلب
+document.getElementById("heart-btn").addEventListener("click", () => {
+
+    showLoveWord();
+
+    if (index < pieces.length) {
+        pieces[index].style.opacity = 1;
+        index++;
+    }
+
+    if (index === pieces.length) {
+
+        document.getElementById("heart-btn").style.display = "none";
+
+        setTimeout(() => {
+            document.getElementById("final-message").scrollIntoView({ behavior: "smooth" });
+        }, 800);
+
+        const message = `بنتي حبيبتي اول حاجة عاوز اقولهالك انك اغلي بنت في حياتي و مش عاوزك تزعلي مني خالص و تسمعي كلامي
+متخافيش عمري ما هضرك يا روح قلبي و هفضل جنبك طول ما انا عايش
+حتي لو مت هكون معاكي و في قلبك دايما و مش هنساكي خالص
+نفسي نعيش انا و انتي سوا و لوحدنا و افضل اجيبلك اللي نفسك فيه
+و بس تخيلي امنيتي اني اجيبلك اللي نفسك فيه مش اللي نفسي انا فيه
+بحبك اوي والله العظيم و هموت و نتجوز يا روح قلبي
+و مهما عدت علينا ظروف و ممكن تخلينا نسيب بعض خلينا متماسكين و نعديها سوا
+لحد ما اجي و اخطبك بإذن الله
+و متخافيش عمري ما هبص لبنت غيرك
+مش عاوز حد قد ما عاوزك انتي
+انتي حرفيا سحر بقيت مشغول بيكي اليوم كله والله يا حبيبتي
+هفضل اقولك بحبك و بدمنك لححد ما اطلع اخر نفس
+و مش هسيبك ابدا يا روح قلب بابا انتي 🥹👩‍❤️‍👨💗`;
+
+        typeMessage(message);
+    }
+});
+
+</script>
+</body>
+</html>
